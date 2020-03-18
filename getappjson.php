@@ -2,8 +2,10 @@
     if(isset($_GET["appid"]) && is_numeric($_GET["appid"]))
     {
         $array = vdf_decode(getGameVdf($_GET["appid"]));
+		//$array = getGameVdf($_GET["appid"]);
         header('Content-Type: application/json');
         echo json_encode($array, JSON_PRETTY_PRINT);
+		//echo $array;
     }
     else
     {
@@ -14,19 +16,17 @@
     }
     //echo $array["depots"]["branches"]["public"]["buildid"];
  
-
     function getGameVdf($appid)
     {
-        $json = shell_exec("/home/steam/steamcmd.sh +login anonymous +app_info_update 1 +app_info_print ". $appid ." +quit");
+        $json = shell_exec("C:\steamcmd\steamcmd.exe +login anonymous +app_info_update 1 +app_info_print ". $appid ." +quit");
         $json = strstr($json, "{");
         if($json == "")
         {
             $json = '{"error" "Data request returned no valid data. You maybe request an non existing AppID?"}';
         }
-        $json = substr(trim($json), 1, -1);
+        $json = substr(trim($json), 1, strrpos(trim($json), "}") - 1);
         return $json;
     }
-
     function vdf_decode($text) {
         if(!is_string($text)) {
             trigger_error("vdf_decode expects parameter 1 to be a string, " . gettype($text) . " given.", E_USER_NOTICE);
