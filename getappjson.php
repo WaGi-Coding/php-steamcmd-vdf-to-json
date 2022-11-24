@@ -68,7 +68,7 @@
                 array_pop($stack);
                 continue;
             }
-            // nessesary for multiline values
+            // needed for multiline values
             while(True) {
                 preg_match($re_keyvalue, $line, $m);
                 if(!$m) {
